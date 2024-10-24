@@ -29,17 +29,22 @@ def main() -> None:
 
     dates = [initial_date]
 
+    _curr_date = initial_date
+    _curr_trip = {}
+
     for i in range(0, 8):
         dates += [initial_date + timedelta(days=i)]
 
     try:
         for date in dates:
+            _curr_date = date
             for trip in challenge_list_of_trips:
                 driver.get(
                     base_url
                 )  # ensure we are at the beggining of the page when start
                 sleep(2)  # waiting loading
                 for departure, arrival in trip.items():
+                    _curr_trip = {"dep": departure, "arr": arrival}
                     crawler.search_for_trip(
                         driver=driver,
                         departure=departure,
@@ -54,13 +59,17 @@ def main() -> None:
 
         with open("./results_webcrawl.json", "w") as file:
             file.write(json.dumps(crawler.results))
-
         print("done")
+
     except Exception as e:
         with open("./results_webcrawl_partial.json", "w") as file:
             file.write(json.dumps(crawler.results))
 
         print(f"Could not complete -> {e}")
+        print(
+            f"Was at {_curr_date.strftime('%Y-%m-%d')} and at trip {_curr_trip}\n"
+            " Please, take over from there."
+        )
 
 
 if __name__ == "__main__":
