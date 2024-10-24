@@ -5,18 +5,18 @@ import json
 from typing import Dict, List
 from request_generator import ApiRoutesRequestGenerator
 
-challenge_list_of_trips = {
-    "São Paulo (Rod. Tietê)": "Belo Horizonte",
-    "Belo Horizonte": "São Paulo (Rod. Tietê)",
-    "São Paulo (Rod. Tietê)": "Ribeirão Preto",
-    "Ribeirão Preto": "São Paulo (Rod. Tietê)",
-    "São Paulo (Rod. Tietê)": "Curitiba",
-    "Curitiba": "São Paulo (Rod. Tietê)",
-    "Rio de Janeiro (Novo Rio)": "Belo Horizonte",
-    "São Paulo (Rod. Barra Funda)": "São José do Rio Preto (Rodoviária)",
-    "São José do Rio Preto (Rodoviária)": "São Paulo (Rod. Barra Funda)",
-    "Rio de Janeiro (Novo Rio)": "Campinas",
-}
+challenge_list_of_trips = [
+    {"São Paulo (Rod. Tietê)": "Belo Horizonte"},
+    {"Belo Horizonte": "São Paulo (Rod. Tietê)"},
+    {"São Paulo (Rod. Tietê)": "Ribeirão Preto"},
+    {"Ribeirão Preto": "São Paulo (Rod. Tietê)"},
+    {"São Paulo (Rod. Tietê)": "Curitiba"},
+    {"Curitiba": "São Paulo (Rod. Tietê)"},
+    {"Rio de Janeiro (Novo Rio)": "Belo Horizonte"},
+    {"São Paulo (Rod. Barra Funda)": "São José do Rio Preto (Rodoviária)"},
+    {"São José do Rio Preto (Rodoviária)": "São Paulo (Rod. Barra Funda)"},
+    {"Rio de Janeiro (Novo Rio)": "Campinas"},
+]
 
 
 def validate_api_response(response: requests.Response) -> Dict[str, bool | str]:
@@ -63,12 +63,16 @@ def main() -> None:
 
     date = datetime.datetime.now()
 
+    logging.info("Started crawling.")
+
     # 7 days range.
     for _ in range(0, 8):
         req_gen.add_trips(
             challenge_list_of_trips, departure_date=date.strftime("%Y-%m-%d")
         )
         date = datetime.timedelta(days=1) + date
+
+    logging.info("Added all routes to the queue.")
 
     # with open("./trips.json", "w") as file:
     #     try:
@@ -85,14 +89,20 @@ def main() -> None:
 
     responses: List[requests.Response] = []
 
+    logging.info("Starting requests.")
+
     for request in req_gen.requests:
         responses += [session.send(request)]
+        logging.info("Completed another request.")
+
+    logging.info("Finished requests")
 
     session.close()
 
     valid_responses: List[requests.Response] = []
     invalid_responses: List[requests.Response] = []
 
+    logging.info("Filtering responses")
     for resp in responses:
         is_valid_dict = validate_api_response(resp)
 
@@ -135,8 +145,9 @@ def main() -> None:
         output_invalid += [trip]
 
     filepath_valid = "./result.json"
-    filepath_invalid = "./result.json"
+    filepath_invalid = "./result_invalid.json"
 
+    logging.info("writing to response.json")
     with open(filepath_valid, "w") as file:
         try:
             file.write(json.dumps(output_valid))
@@ -146,6 +157,7 @@ def main() -> None:
 
     logging.info(msg=f"The output has been written to {filepath_valid}")
 
+    logging.info("writing to response_invalid.json")
     with open(filepath_invalid, "w") as file:
         try:
             file.write(json.dumps(output_invalid))
@@ -153,7 +165,7 @@ def main() -> None:
             logging.warning(f"could not parse\n{repr(e)}")
             file.write(str(output_valid))
 
-    logging.info(msg=f"The bad output has been written to {filepath_valid}")
+    logging.info("Done.")
 
 
 if __name__ == "__main__":

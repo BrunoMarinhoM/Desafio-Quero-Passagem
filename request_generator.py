@@ -25,7 +25,7 @@ class ApiRoutesRequestGenerator(RequestGenerator):
         self.requests = []
         self.trips = []
 
-    def add_trips(self, trips: Dict[str, str], departure_date: str) -> None:
+    def add_trips(self, trips: List[Dict[str, str]], departure_date: str) -> None:
         """
         Adds to ApiRoutesRequestGenerator.trips property the trips according to the
         way the ApiConnector interface requires.
@@ -37,21 +37,27 @@ class ApiRoutesRequestGenerator(RequestGenerator):
             trip:
                 The trips should be formatted the following way:
 
+                [
                 {
                     Origin_city_name: Arrival_city_name
-                }
+                },
+                .
+                .
+                .
+                ]
 
             departure_date: str -> [YYYY-MM-DD]
         """
-        assert isinstance(trips, dict)
-        for departure, arrival in trips.items():
-            self.trips += [
-                {
-                    "from": self.api.get_locale_id(departure),
-                    "to": self.api.get_locale_id(arrival),
-                    "departureDate": departure_date,
-                }
-            ]
+        assert isinstance(trips, list)
+        for trip in trips:
+            for departure, arrival in trip.items():
+                self.trips += [
+                    {
+                        "from": self.api.get_locale_id(departure),
+                        "to": self.api.get_locale_id(arrival),
+                        "departureDate": departure_date,
+                    }
+                ]
 
     def set_trips(self, trips: Dict[str, str], departure_date: str) -> None:
         """
