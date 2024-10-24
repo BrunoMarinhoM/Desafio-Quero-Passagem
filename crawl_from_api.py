@@ -63,7 +63,7 @@ def main() -> None:
 
     date = datetime.datetime.now()
 
-    logging.info("Started crawling.")
+    print("Started crawling.")
 
     # 7 days range.
     for _ in range(0, 8):
@@ -72,7 +72,7 @@ def main() -> None:
         )
         date = datetime.timedelta(days=1) + date
 
-    logging.info("Added all routes to the queue.")
+    print("Added all routes to the queue.")
 
     # with open("./trips.json", "w") as file:
     #     try:
@@ -89,20 +89,20 @@ def main() -> None:
 
     responses: List[requests.Response] = []
 
-    logging.info("Starting requests.")
+    print("Starting requests.")
 
     for request in req_gen.requests:
         responses += [session.send(request)]
-        logging.info("Completed another request.")
+        print("Completed another request.")
 
-    logging.info("Finished requests")
+    print("Finished requests")
 
     session.close()
 
     valid_responses: List[requests.Response] = []
     invalid_responses: List[requests.Response] = []
 
-    logging.info("Filtering responses")
+    print("Filtering responses")
     for resp in responses:
         is_valid_dict = validate_api_response(resp)
 
@@ -144,10 +144,10 @@ def main() -> None:
         }
         output_invalid += [trip]
 
-    filepath_valid = "./result.json"
-    filepath_invalid = "./result_invalid.json"
+    filepath_valid = "./result_api.json"
+    filepath_invalid = "./result_api_invalid.json"
 
-    logging.info("writing to response.json")
+    print("writing to response.json")
     with open(filepath_valid, "w") as file:
         try:
             file.write(json.dumps(output_valid))
@@ -155,9 +155,9 @@ def main() -> None:
             logging.warning(f"could not parse\n{repr(e)}")
             file.write(str(output_valid))
 
-    logging.info(msg=f"The output has been written to {filepath_valid}")
+    print(f"The output has been written to {filepath_valid}")
 
-    logging.info("writing to response_invalid.json")
+    print("writing to response_invalid.json")
     with open(filepath_invalid, "w") as file:
         try:
             file.write(json.dumps(output_invalid))
@@ -165,7 +165,7 @@ def main() -> None:
             logging.warning(f"could not parse\n{repr(e)}")
             file.write(str(output_valid))
 
-    logging.info("Done.")
+    print("Done.")
 
 
 if __name__ == "__main__":
