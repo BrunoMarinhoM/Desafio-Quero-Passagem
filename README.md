@@ -26,7 +26,7 @@ e o crawl_from_api.py que irá autenticar-se e extrair os dados da api.
 [crawl_from_website](https://github.com/BrunoMarinhoM/Desafio-Quero-Passagem/blob/main/crawl_from_website.py)\
 [api_connector.py](https://github.com/BrunoMarinhoM/Desafio-Quero-Passagem/blob/main/api_connector.py)\
 [request_generator.py](https://github.com/BrunoMarinhoM/Desafio-Quero-Passagem/blob/main/request_generator.py)\
-[crawler.py](https://github.com/BrunoMarinhoM/Desafio-Quero-Passagem/blob/main/crawler.py)\
+[selenium_crawler.py](https://github.com/BrunoMarinhoM/Desafio-Quero-Passagem/blob/main/selenium_crawler.py)\
 
 :)
 
