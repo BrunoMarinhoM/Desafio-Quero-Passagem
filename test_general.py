@@ -4,6 +4,19 @@ from time import sleep
 from crawl_from_website import Crawler
 from selenium import webdriver
 
+trips = [
+    {"São Paulo (Rod. Tietê) (SP)": "Belo Horizonte (MG)"},
+    {"Belo Horizonte (MG)": "São Paulo (Rod. Tietê) (SP)"},
+    {"São Paulo (Rod. Tietê) (SP)": "Ribeirão Preto (SP)"},
+    {"Ribeirão Preto (SP)": "São Paulo (Rod. Tietê) (SP)"},
+    {"São Paulo (Rod. Tietê) (SP)": "Curitiba (PR)"},
+    {"Curitiba (PR)": "São Paulo (Rod. Tietê) (SP)"},
+    {"Rio de Janeiro (Novo Rio) (RJ)": "Belo Horizonte (MG)"},
+    {"São Paulo (Rod. Barra Funda) (SP)": "São José do Rio Preto (Rodoviária) (SP)"},
+    {"São José do Rio Preto (Rodoviária) (SP)": "São Paulo (Rod. Barra Funda) (SP)"},
+    {"Rio de Janeiro (Novo Rio) (RJ)": "Campinas (SP)"},
+]
+
 
 def test_flow_case_predefined() -> None:
     crawl = Crawler("https://www.viacaocometa.com.br/")
