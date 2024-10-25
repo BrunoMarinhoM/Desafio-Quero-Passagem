@@ -21,14 +21,14 @@ python crawl_from...
 Com um dos dois arquivos principais o crawl_from_website.py que irá utilizar o selenium e será um pouco mais lento
 e o crawl_from_api.py que irá autenticar-se e extrair os dados da api.
 
-### Source code principal 
-[crawl_from_api.py](https://github.com/BrunoMarinhoM/Desafio-Quero-Passagem/blob/main/crawl_from_api.py)
-[crawl_from_website](https://github.com/BrunoMarinhoM/Desafio-Quero-Passagem/blob/main/crawl_from_website.py)
-[api_connector.py](https://github.com/BrunoMarinhoM/Desafio-Quero-Passagem/blob/main/api_connector.py)
-[request_generator.py](https://github.com/BrunoMarinhoM/Desafio-Quero-Passagem/blob/main/request_generator.py)
-[crawler.py](https://github.com/BrunoMarinhoM/Desafio-Quero-Passagem/blob/main/crawler.py)
+### Source code main files
+[crawl_from_api.py](https://github.com/BrunoMarinhoM/Desafio-Quero-Passagem/blob/main/crawl_from_api.py)\
+[crawl_from_website](https://github.com/BrunoMarinhoM/Desafio-Quero-Passagem/blob/main/crawl_from_website.py)\
+[api_connector.py](https://github.com/BrunoMarinhoM/Desafio-Quero-Passagem/blob/main/api_connector.py)\
+[request_generator.py](https://github.com/BrunoMarinhoM/Desafio-Quero-Passagem/blob/main/request_generator.py)\
+[crawler.py](https://github.com/BrunoMarinhoM/Desafio-Quero-Passagem/blob/main/crawler.py)\
 
 :)
 
 PS: O resultado final está no results_api.json pois (tanto por tempo, quanto correções de última hora) os resultados 
-do crawl utilizando selenium não estão tão completos já que é apenas uma _proof of concept_.
+do crawl utilizando selenium não estão tão completos já que é apenas uma _proof of concept_. Toda a documentação interna do codigo está em ingles!
