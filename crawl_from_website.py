@@ -1,7 +1,7 @@
 from datetime import datetime, timedelta
 import json
 from time import sleep
-from crawler import Crawler
+from selenium_crawler import Crawler
 from selenium import webdriver
 
 base_url = "https://www.viacaocometa.com.br/"
