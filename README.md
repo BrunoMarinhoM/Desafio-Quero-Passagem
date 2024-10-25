@@ -31,4 +31,4 @@ e o crawl_from_api.py que irá autenticar-se e extrair os dados da api.
 :)
 
 PS: O resultado final está no results_api.json pois (tanto por tempo, quanto correções de última hora) os resultados 
-do crawl utilizando selenium não estão tão completos já que é apenas uma _proof of concept_. Toda a documentação interna do codigo está em ingles!
+do crawl utilizando selenium não estão tão completos já que é apenas uma _proof of concept_. Toda a documentação interna do codigo está em ingles! Testado no Linux ;)
