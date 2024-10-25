@@ -10,6 +10,11 @@ class CrawlerException(Exception): ...
 
 
 class Crawler:
+    """
+    Handles the crawling process given a driver (context)
+    Does not manage context to allow for parrallelization in case its necessary
+    """
+
     def __init__(self, base_url: str, trips=[]) -> None:
         self.base_url = base_url
         self.is_on_base_url = True
@@ -17,6 +22,9 @@ class Crawler:
         self.trips = trips
 
     def get_driver(self) -> webdriver.Remote:
+        """
+        Safely returns a webdriver
+        """
         try:
             driver = webdriver.Chrome()
         except Exception:
@@ -29,44 +37,15 @@ class Crawler:
                 )
         return driver
 
-    def crawl_trips(self, driver: webdriver.Remote) -> None:
-        parsed_url = urlparse(driver.current_url)
-        parsed_queries = parse_qs(parsed_url.query)
+    def crawl_trips(self, driver: webdriver.Remote, departure_date: datetime) -> None:
+        """
+        Given the driver is at the proper services page,
+        crawls them all and stores them in self.results.
 
-        try:
-            assert parsed_url.hostname == urlparse(self.base_url).hostname
-
-            assert (
-                parsed_queries.get("data_ida") != None
-                and parsed_queries.get("origem_id") != None
-                and parsed_queries.get("destino_id") != None
-            )
-        except AssertionError:
-            raise CrawlerException(f"Unexpected URL -> {driver.current_url} <-")
-
-        departure_date_list = parsed_queries.get("data_ida")
-
-        try:
-            assert len(departure_date_list) == 1
-            assert len(departure_date_list[0]) == 8
-        except AssertionError:
-            raise CrawlerException(
-                f"Unexpected URL -> {departure_date} <- -> {len(departure_date)} <-"
-            )
-
-        departure_date = departure_date_list[0]
-
-        try:
-            departure_date = datetime.strptime(departure_date, "%d%m%Y")
-
-        except ValueError as ve:
-            raise CrawlerException(
-                f"The date provided in the url -> {departure_date} <- is not valid. Cannot Crawl -> "
-                "{repr(ve)} <-"
-            )
-
-        except Exception as e:
-            raise CrawlerException(f"Unexpected Exception -> {repr(e)}. Cannot crawl.")
+        args:
+            driver: the driver in which the page has already loaded;
+            departure_date: the date of the current ticket beign crawled
+        """
 
         services = driver.find_elements(By.CLASS_NAME, "list-companies-item")
 
@@ -155,8 +134,8 @@ class Crawler:
                             "arrivalDate": f"{arrival_datetime.strftime('%Y-%m-%dT%H%M')}",
                         }
                     ]
-                except NoSuchElementException:
-                    continue
+                except NoSuchElementException as e:
+                    raise Exception(repr(e))
 
             self.results += [result_json]
 
@@ -168,6 +147,10 @@ class Crawler:
         departure_date: datetime,
         trial: int = 0,
     ) -> None:
+        """
+        Given the driver at the current_url, searches for a spefic trip
+        (The trip string should match exactly the one on the webpage)
+        """
         assert driver.current_url == self.base_url
         assert trial <= 5  # tries at most 5 times
 

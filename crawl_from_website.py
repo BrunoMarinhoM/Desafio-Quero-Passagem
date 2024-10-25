@@ -1,4 +1,4 @@
-from datetime import date, datetime, timedelta
+from datetime import datetime, timedelta
 import json
 from time import sleep
 from crawler import Crawler
@@ -21,24 +21,29 @@ challenge_list_of_trips = [
 
 
 def main() -> None:
+    """
+    Crawls the data according to the challenge.
+    """
     crawler = Crawler(base_url)
 
     driver = crawler.get_driver()
 
-    initial_date = datetime.now()
+    initial_date = datetime.now() + timedelta(days=1)
 
-    dates = [initial_date]
+    dates = []
 
     _curr_date = initial_date
     _curr_trip = {}
 
-    for i in range(0, 8):
+    for i in range(1, 7):
         dates += [initial_date + timedelta(days=i)]
 
     try:
-        for date in dates:
-            _curr_date = date
+        for curr_date in dates:
+            print(f"currently at date: {curr_date.strftime('%Y-%m-%d')}")
+            _curr_date = curr_date
             for trip in challenge_list_of_trips:
+                print(f"currently at trip: {trip}")
                 driver.get(
                     base_url
                 )  # ensure we are at the beggining of the page when start
@@ -49,11 +54,12 @@ def main() -> None:
                         driver=driver,
                         departure=departure,
                         arrival=arrival,
-                        departure_date=date,
+                        departure_date=_curr_date,
                     )
                     sleep(5)  # waiting loading
 
-                    crawler.crawl_trips(driver=driver)
+                    crawler.crawl_trips(driver=driver, departure_date=curr_date)
+                    print(f"crawled -> {crawler.results}")
 
                     sleep(5)  # waiting loading
 
